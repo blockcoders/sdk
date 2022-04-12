@@ -4,8 +4,8 @@ import { HMY_TESTNET_NETWORK } from "./network"
 
 
 const BLOCK_NUMBER = 'latest'
-const BLOCK_HASH = '0xcad69f28d810ef5b36acbf8b630246dcba09d53272054626430071602ceb8dca'
-const TX_HASH = '0xd49180590f4e6f831a5ba80dc970e22b3932f824b5e93c404745b8f091ee9168'
+const BLOCK_HASH = '0xd5258b03ae6b7d1ad8e932bf1aed6257241101e98be7ac6dab74013f267596de'
+const TX_HASH = '0x371ec289c5973c16d58cf600f8f2ce040fe8b429a6007976040d55a1759b8993'
 
 describe("Harmony Provider Tests", () => {
   let provider: HarmonyProvider
