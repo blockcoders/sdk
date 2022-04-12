@@ -4,20 +4,18 @@ import {
   Networkish,
 } from '@ethersproject/providers'
 import { fetchJson } from '@ethersproject/web'
-import { deepCopy, /*getStatic*/ } from '@ethersproject/properties'
+import { deepCopy } from '@ethersproject/properties'
 import { getNetwork } from './network'
-
 
 function getResult(payload: any): any {
   if (payload.error) {
     throw Error(payload.error)
   }
-
   return payload.result
 }
 
 export class HarmonyProvider extends JsonRpcProvider {
-  
+
   constructor(_network?: Networkish) {
     const network = getNetwork(_network)
     const baseUrl = HarmonyProvider.getBaseUrl(network)
@@ -28,9 +26,17 @@ export class HarmonyProvider extends JsonRpcProvider {
 
   async perform(method: string, params: Record<string, any>): Promise<any> {
     switch (method) {
+      case 'getBlock':
+        if(params.blockTag) {
+          return this.send('hmy_getBlockByNumber', [params.blockTag, params.includeTransactions])
+        } else if(params.blockHash) {
+          return this.send('hmy_getBlockByHash', [params.blockHash, params.includeTransactions])
+        }
+        return null
       case 'getBlockNumber':
-        const blockResponse = await this.send('hmy_getBlockByNumber', params )
-        return parseInt(blockResponse.number,16)
+        return parseInt(await this.send('hmy_blockNumber',[]),16)
+      case "getTransaction":
+        return this.send("hmy_getTransactionByHash", [ params.transactionHash ])
       default:
         return super.perform(method, params)
     }
