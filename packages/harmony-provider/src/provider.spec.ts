@@ -2,8 +2,8 @@ import { fail } from "assert"
 import { HarmonyProvider } from "./provider"
 import { HMY_TESTNET_NETWORK } from "./network"
 
-
-const BLOCK_NUMBER = 'latest'
+const BLOCK_NUMBER_HEX = '0x47db8e'
+const BLOCK_NUMBER = parseInt(BLOCK_NUMBER_HEX,16)
 const BLOCK_HASH = '0xd5258b03ae6b7d1ad8e932bf1aed6257241101e98be7ac6dab74013f267596de'
 const TX_HASH = '0x371ec289c5973c16d58cf600f8f2ce040fe8b429a6007976040d55a1759b8993'
 
@@ -22,6 +22,24 @@ describe("Harmony Provider Tests", () => {
   it("gets the block number", async () => {
     const response = await provider.perform("getBlockNumber", [])
     console.log("TEST",response)
+  })
+
+  it("gets the block with txs by hex number", async () => {
+    const params = {
+      blockTag: BLOCK_NUMBER_HEX,
+      includeTransactions: true
+    }
+    const response = await provider.perform("getBlock", params)
+    console.log(response)
+  })
+
+  it("gets the block without txs by hex number", async () => {
+    const params = {
+      blockTag: BLOCK_NUMBER_HEX,
+      includeTransactions: false
+    }
+    const response = await provider.perform("getBlock", params)
+    console.log(response)
   })
 
   it("gets the block with txs by number", async () => {
