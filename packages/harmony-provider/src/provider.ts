@@ -13,6 +13,8 @@ function getResult(payload: any): any {
   }
   return payload.result
 }
+const HARMONY_MAINNET_URL = 'https://api.harmony.one'
+const HARMONY_TESTNET_URL = 'https://api.s0.b.hmny.io'
 
 export class HarmonyProvider extends JsonRpcProvider {
 
@@ -27,14 +29,19 @@ export class HarmonyProvider extends JsonRpcProvider {
   async perform(method: string, params: Record<string, any>): Promise<any> {
     switch (method) {
       case 'getBlock':
+        const includeTransactions: boolean = params?.includeTransactions || false
         if(params.blockTag) {
-          return this.send('hmy_getBlockByNumber', [params.blockTag, params.includeTransactions])
+          return this.send('hmy_getBlockByNumber', [params.blockTag, includeTransactions])
         } else if(params.blockHash) {
-          return this.send('hmy_getBlockByHash', [params.blockHash, params.includeTransactions])
+          return this.send('hmy_getBlockByHash', [params.blockHash, includeTransactions])
         }
         return null
       case 'getBlockNumber':
-        return parseInt(await this.send('hmy_blockNumber',[]),16)
+        const hexBlockNumber = await this.send('hmy_blockNumber',[])
+        if(!hexBlockNumber) {
+          throw Error("Error while getting the block number")
+        }
+        return parseInt(hexBlockNumber,16)
       case "getTransaction":
         return this.send("hmy_getTransactionByHash", [ params.transactionHash ])
       default:
@@ -45,9 +52,9 @@ export class HarmonyProvider extends JsonRpcProvider {
   static getBaseUrl(network?: Network | null): string {
     switch (network ? network.name : 'invalid') {
       case 'harmony':
-        return 'https://api.harmony.one'
+        return HARMONY_MAINNET_URL
       case 'harmonytestnet':
-        return 'https://api.s0.b.hmny.io'
+        return HARMONY_TESTNET_URL
     }
 
     throw Error(`unsupported network, ${network}`)
@@ -55,7 +62,6 @@ export class HarmonyProvider extends JsonRpcProvider {
 
   getNextId(): number {
     this._nextId += 1
-
     return this._nextId
   }
 
