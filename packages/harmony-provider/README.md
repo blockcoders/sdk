@@ -1,13 +1,13 @@
-# Harmony SDK
+# Harmony RPC Providers
 
-Harmony SDK provides a collection of methods to interact with the Harmony blockchain.
+This library provides a collection of methods to interact with the Harmony blockchain.
 
 Currently under developement 🤓
 
 ## Install
 
 ```sh
-npm i harmony-sdk
+npm i @harmony-js/providers
 ```
 
 ## Usage
@@ -16,10 +16,10 @@ npm i harmony-sdk
 
 ```typescript
 // JavaScript
-const { HarmonyProvider } = require('harmony-sdk')
+const { HarmonyProvider } = require('@harmony-js/providers')
 
 // TypeScript
-import { HarmonyProvider } from 'harmony-sdk'
+import { HarmonyProvider } from '@harmony-js/providers'
 ```
 
 ## Harmony SDK
@@ -34,7 +34,7 @@ Expected Methods:
 ### Initializing
 
 ```typescript
-import { HarmonyProvider, HMY_TESTNET_NETWORK } from 'harmony-sdk'
+import { HarmonyProvider, HMY_TESTNET_NETWORK } from '@harmony-js/providers'
 
 const provider = new HarmonyProvider(HMY_TESTNET_NETWORK) // Use HMY_NETWORK to interact with Harmony's mainnet
 ```
@@ -46,7 +46,7 @@ const provider = new HarmonyProvider(HMY_TESTNET_NETWORK) // Use HMY_NETWORK to 
 Returns the last block number on the blockchain.
 
 ```ts
-import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from 'harmony-sdk'
+import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from '@harmony-js/providers'
 
 const provider = new HarmonyProvider(HMY_TESTNET_NETWORK)
 const blockNumber = await provider.getBlockNumber()
@@ -58,7 +58,7 @@ const otherWayToGetBlockNumber = await provider.perform(HarmonyProviderMethods.g
 Returns the block data. The block can be searched by it's hash or number. It can retrieve the block transactions data or just the transactions hashes.
 
 ```ts
-import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from 'harmony-sdk'
+import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from '@harmony-js/providers'
 
 const provider = new HarmonyProvider(HMY_TESTNET_NETWORK)
 
@@ -92,7 +92,7 @@ const someBlock = await provider.perform(HarmonyProviderMethods.getBlock, params
 Returns the transaction data by hash.
 
 ```ts
-import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from 'harmony-sdk'
+import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from '@harmony-js/providers'
 
 const provider = new HarmonyProvider(HMY_TESTNET_NETWORK)
 
