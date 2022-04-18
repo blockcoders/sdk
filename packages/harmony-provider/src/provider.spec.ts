@@ -27,9 +27,9 @@ describe('Harmony Provider Tests', () => {
   })
 
   describe('Get block by hash or number(int or hex)', () => {
-    it('returns null if there are no valid params', async () => {
+    it('fails if there are no valid params', async () => {
       try {
-        await provider.getBlockByTagOrHash({})
+        await provider.getBlock('')
         fail('Should fail while trying to getBlockByNumber with invalid parameters')
       } catch (error) {
         expect(error).to.not.be.undefined
@@ -37,10 +37,7 @@ describe('Harmony Provider Tests', () => {
     })
 
     it("get the last block using the 'latest' value", async () => {
-      const params = {
-        blockTag: 'latest',
-      }
-      const response = await provider.getBlockByTagOrHash(params)
+      const response = await provider.getBlock('latest')
       expect(response).to.not.be.null
       expect(response).to.haveOwnProperty('number')
       expect(response).to.haveOwnProperty('hash')
@@ -66,121 +63,58 @@ describe('Harmony Provider Tests', () => {
       expect(response).to.haveOwnProperty('stakingTransactions')
     })
 
-    it('fails when the blockTag property (used to find by number) is invalid', async () => {
+    it('fails when the blockTag property is invalid', async () => {
       try {
-        const params = {
-          blockTag: 'invalid',
-        }
-        await provider.getBlockByTagOrHash(params)
-        fail('Should fail while trying to getBlockByNumber with an invalid number')
+        await provider.getBlock('invalid')
+        fail('Should fail while trying to getBlock with an invalid value')
       } catch (error) {
         expect(error).to.not.be.undefined
       }
     })
 
-    it('fails when the blockHash property (used to find by hash) is invalid', async () => {
-      try {
-        const params = {
-          blockHash: 'invalid',
-        }
-        await provider.getBlockByTagOrHash(params)
-        fail('Should fail while trying to getBlockByHash with an invalid hash')
-      } catch (error) {
-        expect(error).to.not.be.undefined
-      }
-    })
-
-    it('gets the block without txs by hex number without sending the includeTransactions property', async () => {
-      const params = {
-        blockTag: BLOCK_NUMBER_HEX,
-      }
-      const response = await provider.getBlockByTagOrHash(params)
+    it('gets the block by hex number', async () => {
+      const response = await provider.getBlock(BLOCK_NUMBER_HEX)
       expect(response).to.not.be.null
       expect(response.number).to.equal(BLOCK_NUMBER_HEX)
       expect(response.transactions[0]).to.equal(TX_HASH)
     })
 
-    it('gets the block without txs by number without sending the includeTransactions property', async () => {
-      const params = {
-        blockTag: BLOCK_NUMBER,
-      }
-      const response = await provider.getBlockByTagOrHash(params)
+    it('gets the block by number', async () => {
+      const response = await provider.getBlock(BLOCK_NUMBER)
       expect(response).to.not.be.null
       expect(response.number).to.equal(BLOCK_NUMBER_HEX)
       expect(response.transactions[0]).to.equal(TX_HASH)
     })
 
-    it('gets the block without txs by hash without sending the includeTransactions property', async () => {
-      const params = {
-        blockHash: BLOCK_HASH,
-      }
-      const response = await provider.getBlockByTagOrHash(params)
+    it('gets the block by hash', async () => {
+      const response = await provider.getBlock(BLOCK_HASH)
       expect(response).to.not.be.null
       expect(response.number).to.equal(BLOCK_NUMBER_HEX)
       expect(response.transactions[0]).to.equal(TX_HASH)
     })
 
     it('gets the block with txs by hex number', async () => {
-      const params = {
-        blockTag: BLOCK_NUMBER_HEX,
-      }
-      const response = await provider.getBlockByTagOrHash(params, true)
+      const response = await provider.getBlockWithTransactions(BLOCK_NUMBER_HEX)
       expect(response).to.not.be.null
       expect(response.number).to.equal(BLOCK_NUMBER_HEX)
       expect(response.transactions[0]).to.haveOwnProperty('hash')
       expect(response.transactions[0].hash).to.equal(TX_HASH)
-    })
-
-    it('gets the block without txs by hex number', async () => {
-      const params = {
-        blockTag: BLOCK_NUMBER_HEX,
-      }
-      const response = await provider.getBlockByTagOrHash(params, false)
-      expect(response).to.not.be.null
-      expect(response.number).to.equal(BLOCK_NUMBER_HEX)
-      expect(response.transactions[0]).to.equal(TX_HASH)
     })
 
     it('gets the block with txs by number', async () => {
-      const params = {
-        blockTag: BLOCK_NUMBER,
-      }
-      const response = await provider.getBlockByTagOrHash(params, true)
+      const response = await provider.getBlockWithTransactions(BLOCK_NUMBER)
       expect(response).to.not.be.null
       expect(response.number).to.equal(BLOCK_NUMBER_HEX)
       expect(response.transactions[0]).to.haveOwnProperty('hash')
       expect(response.transactions[0].hash).to.equal(TX_HASH)
-    })
-
-    it('gets the block without txs by number', async () => {
-      const params = {
-        blockTag: BLOCK_NUMBER,
-      }
-      const response = await provider.getBlockByTagOrHash(params, false)
-      expect(response).to.not.be.null
-      expect(response.number).to.equal(BLOCK_NUMBER_HEX)
-      expect(response.transactions[0]).to.equal(TX_HASH)
     })
 
     it('gets the block with txs by hash', async () => {
-      const params = {
-        blockHash: BLOCK_HASH,
-      }
-      const response = await await provider.getBlockByTagOrHash(params, true)
+      const response = await await provider.getBlockWithTransactions(BLOCK_HASH)
       expect(response).to.not.be.null
       expect(response.hash).to.equal(BLOCK_HASH)
       expect(response.transactions[0]).to.haveOwnProperty('hash')
       expect(response.transactions[0].hash).to.equal(TX_HASH)
-    })
-
-    it('gets the block without txs by hash', async () => {
-      const params = {
-        blockHash: BLOCK_HASH,
-      }
-      const response = await provider.getBlockByTagOrHash(params, false)
-      expect(response).to.not.be.null
-      expect(response.hash).to.equal(BLOCK_HASH)
-      expect(response.transactions[0]).to.equal(TX_HASH)
     })
   })
 

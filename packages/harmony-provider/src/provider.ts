@@ -1,4 +1,5 @@
-import { JsonRpcProvider, Network, Networkish, TransactionResponse } from '@ethersproject/providers'
+import { Block, BlockWithTransactions } from '@ethersproject/abstract-provider'
+import { BlockTag, JsonRpcProvider, Network, Networkish, TransactionResponse } from '@ethersproject/providers'
 import { getNetwork } from './network'
 
 const HARMONY_MAINNET_URL = 'https://api.harmony.one'
@@ -10,9 +11,14 @@ export enum HarmonyProviderMethods {
   getTransaction = 'getTransaction',
 }
 
-interface blockParams {
-  blockTag?: string | number
-  blockHash?: string
+export function isHexString(value: any, length?: number): boolean {
+  if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
+    return false
+  }
+  if (length && value.length !== 2 + 2 * length) {
+    return false
+  }
+  return true
 }
 
 export class HarmonyProvider extends JsonRpcProvider {
@@ -27,7 +33,9 @@ export class HarmonyProvider extends JsonRpcProvider {
   async perform(method: string, params: Record<string, any>): Promise<any> {
     switch (method) {
       case HarmonyProviderMethods.getBlock:
-        return this.getBlockByTagOrHash(params, params.includeTransactions)
+        const { includeTransactions = false, blockTag, blockHash } = params || {}
+        const blockHashOrTag = blockHash || blockTag
+        return includeTransactions ? this.getBlockWithTransactions(blockHashOrTag) : this.getBlock(blockHashOrTag)
       case HarmonyProviderMethods.getBlockNumber:
         return this.getBlockNumber()
       case HarmonyProviderMethods.getTransaction:
@@ -41,14 +49,25 @@ export class HarmonyProvider extends JsonRpcProvider {
     return this.send('hmy_getTransactionByHash', [hash])
   }
 
-  async getBlockByTagOrHash(params: blockParams, includeTransactions = false): Promise<any> {
-    if (params.blockTag) {
-      return this.send('hmy_getBlockByNumber', [params.blockTag, includeTransactions])
-    } else if (params.blockHash) {
-      return this.send('hmy_getBlockByHash', [params.blockHash, includeTransactions])
-    } else {
-      throw Error(`Invalid parameters: ${params}`)
+  isBlockHash(blockHashOrBlockTag: BlockTag): boolean {
+    if (isHexString(blockHashOrBlockTag, 32)) {
+      return true
     }
+    return false
+  }
+
+  async getBlock(blockHashOrBlockTag: BlockTag): Promise<Block> {
+    if (this.isBlockHash(blockHashOrBlockTag)) {
+      return this.send('hmy_getBlockByHash', [blockHashOrBlockTag, false])
+    }
+    return this.send('hmy_getBlockByNumber', [blockHashOrBlockTag, false])
+  }
+
+  async getBlockWithTransactions(blockHashOrBlockTag: BlockTag): Promise<BlockWithTransactions> {
+    if (this.isBlockHash(blockHashOrBlockTag)) {
+      return this.send('hmy_getBlockByHash', [blockHashOrBlockTag, true])
+    }
+    return this.send('hmy_getBlockByNumber', [blockHashOrBlockTag, true])
   }
 
   async getBlockNumber(): Promise<number> {

@@ -28,7 +28,8 @@ Expected Methods:
 | Method | Description |
 | ------------- | ------------- |
 | getBlockNumber | Gets the last block number. |
-| getBlock | Gets the block data by block number or block hash. |
+| getBlock | Gets the block data by block number or block hash (retrieves transactions hashes only). |
+| getBlockWithTransactions | Gets the block data by block number or block hash and retrieve the transactions data. |
 | getTransaction | Gets the transaction data by transaction hash. |
 
 ### Initializing
@@ -53,7 +54,7 @@ const blockNumber = await provider.getBlockNumber()
 // Executing the perform method 
 const otherWayToGetBlockNumber = await provider.perform(HarmonyProviderMethods.getBlockNumber, {})
 ```
-#### getBlockByTagOrHash
+#### getBlock and getBlockWithTransactions
 
 Returns the block data. The block can be searched by it's hash or number. It can retrieve the block transactions data or just the transactions hashes.
 
@@ -64,21 +65,15 @@ const provider = new HarmonyProvider(HMY_TESTNET_NETWORK)
 
 // Searching with number
 
-const searchByTag = {
-    blockTag: "0x47db8e" // The block number can be and hexadecimal, number or "latest"
-}
-const block = await provider.getBlockByTagOrHash(searchByTag)
-// The second parameter as 'true' here indicates that will retrieve transactions data
-const blockWithTransactionsData = await provider.getBlockByTagOrHash(searchByTag, true)
+const searchByTag = "0x47db8e" // The block number can be an hexadecimal, number or "latest"
+const block = await provider.getBlock(searchByTag)
+const blockWithTransactionsData = await provider.getBlockWithTransactions(searchByTag)
 
 // Searching with hash
 
-const searchByHash = {
-    blockHash: "0xd5258b03ae6b7d1ad8e932bf1aed6257241101e98be7ac6dab74013f267596de"
-}
-const sameBlock = await provider.getBlockByTagOrHash(searchByHash)
-// The second parameter as 'true' here indicates that will retrieve transactions data
-const sameBlockWithTransactionsData = await provider.getBlockByTagOrHash(searchByHash, true)
+const searchByHash = "0xd5258b03ae6b7d1ad8e932bf1aed6257241101e98be7ac6dab74013f267596de"
+const sameBlock = await provider.getBlock(searchByHash)
+const sameBlockWithTransactionsData = await provider.getBlockWithTransactions(searchByHash)
 
 // Using perform
 const params = {
