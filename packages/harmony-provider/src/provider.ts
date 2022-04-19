@@ -30,41 +30,25 @@ export class HarmonyProvider extends JsonRpcProvider {
     this._nextId = 1
   }
 
-  async perform(method: string, params: Record<string, any>): Promise<any> {
-    switch (method) {
-      case HarmonyProviderMethods.getBlock:
-        const { includeTransactions = false, blockTag, blockHash } = params || {}
-        const blockHashOrTag = blockHash || blockTag
-        return includeTransactions ? this.getBlockWithTransactions(blockHashOrTag) : this.getBlock(blockHashOrTag)
-      case HarmonyProviderMethods.getBlockNumber:
-        return this.getBlockNumber()
-      case HarmonyProviderMethods.getTransaction:
-        return this.getTransaction(params.transactionHash)
-      default:
-        return super.perform(method, params)
+  static getBaseUrl(network?: Network | null): string {
+    switch (network ? network.name : 'invalid') {
+      case 'harmony':
+        return HARMONY_MAINNET_URL
+      case 'harmonytestnet':
+        return HARMONY_TESTNET_URL
     }
-  }
-
-  async getTransaction(hash: string): Promise<TransactionResponse> {
-    return this.send('hmy_getTransactionByHash', [hash])
-  }
-
-  isBlockHash(blockHashOrBlockTag: BlockTag): boolean {
-    if (isHexString(blockHashOrBlockTag, 32)) {
-      return true
-    }
-    return false
+    throw Error(`unsupported network, ${network}`)
   }
 
   async getBlock(blockHashOrBlockTag: BlockTag): Promise<Block> {
-    if (this.isBlockHash(blockHashOrBlockTag)) {
+    if (isHexString(blockHashOrBlockTag, 32)) {
       return this.send('hmy_getBlockByHash', [blockHashOrBlockTag, false])
     }
     return this.send('hmy_getBlockByNumber', [blockHashOrBlockTag, false])
   }
 
   async getBlockWithTransactions(blockHashOrBlockTag: BlockTag): Promise<BlockWithTransactions> {
-    if (this.isBlockHash(blockHashOrBlockTag)) {
+    if (isHexString(blockHashOrBlockTag, 32)) {
       return this.send('hmy_getBlockByHash', [blockHashOrBlockTag, true])
     }
     return this.send('hmy_getBlockByNumber', [blockHashOrBlockTag, true])
@@ -78,19 +62,22 @@ export class HarmonyProvider extends JsonRpcProvider {
     return parseInt(hexBlockNumber, 16)
   }
 
-  static getBaseUrl(network?: Network | null): string {
-    switch (network ? network.name : 'invalid') {
-      case 'harmony':
-        return HARMONY_MAINNET_URL
-      case 'harmonytestnet':
-        return HARMONY_TESTNET_URL
-    }
-
-    throw Error(`unsupported network, ${network}`)
+  async getTransaction(hash: string): Promise<TransactionResponse> {
+    return this.send('hmy_getTransactionByHash', [hash])
   }
 
-  getNextId(): number {
-    this._nextId += 1
-    return this._nextId
+  async perform(method: string, params: Record<string, any>): Promise<any> {
+    switch (method) {
+      case HarmonyProviderMethods.getBlock:
+        const { includeTransactions = false, blockTag, blockHash } = params || {}
+        const blockHashOrTag = blockHash || blockTag
+        return includeTransactions ? this.getBlockWithTransactions(blockHashOrTag) : this.getBlock(blockHashOrTag)
+      case HarmonyProviderMethods.getBlockNumber:
+        return this.getBlockNumber()
+      case HarmonyProviderMethods.getTransaction:
+        return this.getTransaction(params.transactionHash)
+      default:
+        return super.perform(method, params)
+    }
   }
 }
