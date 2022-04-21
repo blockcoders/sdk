@@ -1,7 +1,7 @@
 {
   "name": "@blockcoders/harmony-providers",
   "version": "1.0.0",
-  "description": "",
+  "description": "This library provides a collection of methods to interact with the Harmony blockchain.",
   "main": "index.js",
   "scripts": {
     "build": "tsc --build ./tsconfig.json",
@@ -9,7 +9,7 @@
     "lint:ci": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
-  "author": "",
+  "author": "fer@blockcoders.io",
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.3.0",
@@ -28,5 +28,9 @@
   "dependencies": {
     "@ethersproject/networks": "^5.6.1",
     "@ethersproject/providers": "^5.6.2"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/blockcoders/sdk/issues"
+  },
+  "homepage": "https://github.com/blockcoders/sdk#readme"
 }
