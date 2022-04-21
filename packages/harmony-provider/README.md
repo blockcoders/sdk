@@ -7,7 +7,7 @@ Currently under developement 🤓
 ## Install
 
 ```sh
-npm i @harmony-js/providers
+npm i @blockcoders/harmony-providers
 ```
 
 ## Usage
@@ -16,10 +16,10 @@ npm i @harmony-js/providers
 
 ```typescript
 // JavaScript
-const { HarmonyProvider } = require('@harmony-js/providers')
+const { HarmonyProvider } = require('@blockcoders/harmony-providers')
 
 // TypeScript
-import { HarmonyProvider } from '@harmony-js/providers'
+import { HarmonyProvider } from '@blockcoders/harmony-providers'
 ```
 
 ## Harmony SDK
@@ -35,7 +35,7 @@ Expected Methods:
 ### Initializing
 
 ```typescript
-import { HarmonyProvider, HMY_TESTNET_NETWORK } from '@harmony-js/providers'
+import { HarmonyProvider, HMY_TESTNET_NETWORK } from '@blockcoders/harmony-providers'
 
 const provider = new HarmonyProvider(HMY_TESTNET_NETWORK) // Use HMY_NETWORK to interact with Harmony's mainnet
 ```
@@ -47,7 +47,7 @@ const provider = new HarmonyProvider(HMY_TESTNET_NETWORK) // Use HMY_NETWORK to 
 Returns the last block number on the blockchain.
 
 ```ts
-import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from '@harmony-js/providers'
+import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from '@blockcoders/harmony-providers'
 
 const provider = new HarmonyProvider(HMY_TESTNET_NETWORK)
 const blockNumber = await provider.getBlockNumber()
@@ -59,7 +59,7 @@ const otherWayToGetBlockNumber = await provider.perform(HarmonyProviderMethods.g
 Returns the block data. The block can be searched by it's hash or number. It can retrieve the block transactions data or just the transactions hashes.
 
 ```ts
-import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from '@harmony-js/providers'
+import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from '@blockcoders/harmony-providers'
 
 const provider = new HarmonyProvider(HMY_TESTNET_NETWORK)
 
@@ -87,7 +87,7 @@ const someBlock = await provider.perform(HarmonyProviderMethods.getBlock, params
 Returns the transaction data by hash.
 
 ```ts
-import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from '@harmony-js/providers'
+import { HarmonyProvider, HarmonyProviderMethods, HMY_TESTNET_NETWORK } from '@blockcoders/harmony-providers'
 
 const provider = new HarmonyProvider(HMY_TESTNET_NETWORK)
 

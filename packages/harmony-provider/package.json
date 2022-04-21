@@ -1,5 +1,5 @@
 {
-  "name": "harmony-provider",
+  "name": "@blockcoders/harmony-providers",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
